@@ -1,8 +1,9 @@
 {
   "name": "todaq-api-helper",
-  "version": "0.0.8",
+  "version": "0.1.1",
   "description": "Todaq API helper",
   "private": false,
+  "main": "src/index.js",
   "engines": {
     "yarn": "^1.15"
   },
@@ -13,6 +14,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.3",
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "core-js": "^3",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",

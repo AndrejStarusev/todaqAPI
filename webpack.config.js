@@ -1,5 +1,5 @@
 
-const HtmlWebPackPlugin = require("html-webpack-plugin");
+const HtmlWebPackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const path = require('path');
 const env = require('yargs').argv.env;
@@ -19,7 +19,7 @@ if (env === 'build') {
 }
 
 const config = {
-    entry: { app: './src/index.js' },
+    entry: ['babel-polyfill', './src/index.js' ],
     output: {
         path: path.resolve(__dirname, 'build'),
         filename: 'bundle.js',
@@ -46,8 +46,8 @@ const config = {
     },
     plugins: [
       new HtmlWebPackPlugin({
-        template: "./src/index.html",
-        filename: "./index.html"
+        template: './src/index.html',
+        filename: './index.html'
       }),
     ],
     resolve: {
