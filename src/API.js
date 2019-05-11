@@ -17,13 +17,15 @@ class API {
     get = (url, settings) => {
         return axios
             .get(url, { ...this.settings, ...(settings || {}) })
-            .then(res => res.data);
+            .then(res => res.data)
+            .catch(err => console.warn('error: ', err));
     };
 
     post = (url, data, settings) => {
         return axios
             .post(url, data, { ...this.settings, ...(settings || {}) })
-            .then(res => res.body);
+            .then(res => res.body)
+            .catch(err => console.warn('error: ', err));
     };
 }
 
