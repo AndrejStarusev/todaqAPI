@@ -1,14 +1,32 @@
 import API from './API';
+import SimpleCache from './simpleCache';
 
 // TODO handle CORS issue, cors-anywhere is a temporary solution
 const proxyURL = 'https://cors-anywhere.herokuapp.com';
 const defaultFileType = '0000000000000000000000000000000000000000000000000000000000000000';
 const EP = 'https://api.todaqfinance.net';
 
+const filesCache = new SimpleCache();
+const accountsCache = new SimpleCache();
+const transactionsCache = new SimpleCache();
+
 const routes = {
     accounts: {
         get: {
-            accountsAll: settings => API.get(`${proxyURL}/${EP}/accounts`, settings),
+            accountsAll: (force, settings) => {
+                const items = accountsCache.entities.all;
+
+                if (items.length > 0 && !force) {
+                    return Promise.resolve(items);
+                }
+
+                return API.get(`${proxyURL}/${EP}/accounts`, settings)
+                    .then(res => { 
+                        accountsCache.addItems(res.data);
+                        return res.data;
+                    });
+            },
+
             accountByID: (accountID, settings) => API.get(`${proxyURL}/${EP}/accounts/${accountID.toString()}`, settings),
             filesAll: (accountID, settings) => API.get(`${proxyURL}/${EP}/accounts/${accountID.toString()}/files`, settings),
             filesByType: (type = defaultFileType, accountID, settings) => API.get(
@@ -63,16 +81,18 @@ async function testRoute() {
     const accounts = await routes.accounts.get.accountsAll();
     console.log('accounts', accounts);
 
+    setTimeout(async () => {
+        const accounts2 = await routes.accounts.get.accountsAll();
+        console.log('accounts2', accounts2);
+    }, 3000);
+
     const files = await routes.files.get.filesAll();
     console.log('files', files);
 
     const transactions = await routes.transactions.get.transactionsAll();
     console.log('transactions', transactions);
-
-    const roots = await routes.cycles.get.listRoots();
-    console.log('roots', roots);
 ;};
 
-testRoute();
+// testRoute();
 
 export default routes;
